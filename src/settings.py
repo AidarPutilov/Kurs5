@@ -7,7 +7,10 @@ from configparser import ConfigParser
 ROOT_PATH = Path(__file__).parent.parent
 
 # URL с вакансиями HH
-HEAD_HUNTER_URL = 'https://api.hh.ru/vacancies'
+HH_VACANCIES_URL = 'https://api.hh.ru/vacancies'
+
+# URL с вакансиями HH
+HH_EMPLOYERS_URL = 'https://api.hh.ru/employers'
 
 # Формат логов
 FORMAT = '%(asctime)-30s %(filename)-20s %(message)s'
@@ -16,6 +19,21 @@ logging.basicConfig(level=logging.INFO, filename='main.log', filemode='w', forma
 
 # Файл с настройками базы данных
 DATABASE_INI_FILE = ROOT_PATH.joinpath('data', 'database.ini')
+
+# Список id работодателей
+LIST_EMPLOYERS = [
+    # '3529',
+    # '242574',
+    # '1073798',
+    # '208707',
+    # '15356',
+    # '1212051',
+    # '3776',
+    # '3676',
+    '2334525',
+    '4495459'
+]
+
 
 def config(filename: str, section: str) -> dict:
     # Создание парсера
@@ -28,7 +46,7 @@ def config(filename: str, section: str) -> dict:
         for param in params:
             db[param[0]] = param[1]
     else:
-        raise Exception('Секция {0} в файле {1} не найдена'.format(section, filename))
+        raise Exception(f'Секция {section} в файле {filename} не найдена.')
     return db
 
 
