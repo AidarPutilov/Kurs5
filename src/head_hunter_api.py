@@ -17,7 +17,6 @@ class HeadHunterAPI():
     def get_employer(self) -> dict:
         """ Выполнение запроса к HH, получение информации о работодателе, обработка простых ошибок """
         params = {'locale': 'RU'}
-        result = []
         response = requests.get(self.employers_url + '/' + self.employer_id,
                                 headers=self.headers, params=params)
         is_allowed = response.status_code == 200
@@ -27,9 +26,7 @@ class HeadHunterAPI():
             employer = response.json()
         except JSONDecodeError:
             raise HeadHunterAPIException(f'Ошибка обработки данных данных {response.text}')
-        result.append({'id': employer['id'], 'name': employer['name']})
-        return result
-
+        return {'id': employer['id'], 'name': employer['name'], 'url': employer['alternate_url']}
 
     def get_vacancies(self) -> dict:
         """ Выполнение запроса к HH, получение вакансий работодателей, обработка простых ошибок """
