@@ -2,10 +2,10 @@ import requests
 from requests import JSONDecodeError
 
 from src.exceptions import HeadHunterAPIException
-from src.settings import HH_VACANCIES_URL, HH_EMPLOYERS_URL, LIST_EMPLOYERS
+from src.settings import HH_VACANCIES_URL, HH_EMPLOYERS_URL
 
 
-class HeadHunterAPI():
+class HeadHunterAPI:
     """ Класс для работы с API HeadHunter """
 
     def __init__(self, employer_id: str) -> None:
@@ -28,7 +28,7 @@ class HeadHunterAPI():
             raise HeadHunterAPIException(f'Ошибка обработки данных данных {response.text}')
         return {'id': employer['id'], 'name': employer['name'], 'url': employer['alternate_url']}
 
-    def get_vacancies(self) -> dict:
+    def get_vacancies(self) -> list[dict]:
         """ Выполнение запроса к HH, получение вакансий работодателей, обработка простых ошибок """
         result = []
         page = 0
@@ -42,7 +42,8 @@ class HeadHunterAPI():
             response = requests.get(self.vacancies_url, headers=self.headers, params=params)
             is_allowed = response.status_code == 200
             if not is_allowed:
-                raise HeadHunterAPIException(f'Ошибка запроса данных status_code: {response.status_code}, {response.text}')
+                raise HeadHunterAPIException(f'Ошибка запроса данных status_code: {response.status_code}, '
+                                             f'{response.text}')
             try:
                 vacancies = response.json()['items']
             except JSONDecodeError:
@@ -54,7 +55,7 @@ class HeadHunterAPI():
                                'salary': self.verify_salary(vacancy.get('salary')),
                                'mid_salary': self.get_middle_salary(vacancy.get('salary')),
                                'url': vacancy.get('alternate_url')
-                              })
+                               })
             page += 1
             if response.json()['pages'] == page:
                 break
@@ -89,11 +90,3 @@ class HeadHunterAPI():
 
 if __name__ == '__main__':
     pass
-
-    # hh = HeadHunterAPI('2334525')
-    #
-    # vac = hh.get_vacancies()
-    # empl = hh.get_employer()
-    #
-    # print(empl)
-    # [print(v) for v in vac]
