@@ -1,8 +1,7 @@
 from src.db_manager import DBManager
 from src.head_hunter_api import HeadHunterAPI
 from src.settings import DATABASE_INI_FILE, LIST_EMPLOYERS
-from src.utils import db_config, user_dialog
-from utils import create_db
+from src.utils import db_config, user_dialog, create_db
 
 
 def main():
@@ -10,6 +9,7 @@ def main():
     db_config_data = db_config(DATABASE_INI_FILE)
 
     # Создание БД
+    print('Создание базы данных и таблиц...')
     create_db('hh', db_config_data)
 
     # Создание объекта для работы с БД
@@ -18,7 +18,8 @@ def main():
                       vacancies_table='vacancies',
                       **db_config_data)
 
-    # Цикл по списку работодателей
+    # Получение данных от HH
+    print('Получение данных от Head Hunter и заполнение базы данных...')
     for employer in LIST_EMPLOYERS:
         # Получение данных из HH
         hh_api = HeadHunterAPI(employer)
@@ -32,6 +33,7 @@ def main():
     user_dialog(hh_db)
 
     # Удаление объекта, закрытие БД
+    print('Программа завершена')
     del hh_db
 
 
