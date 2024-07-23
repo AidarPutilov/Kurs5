@@ -51,13 +51,13 @@ class HeadHunterAPI():
             except JSONDecodeError:
                 raise HeadHunterAPIException(f'Ошибка обработки данных данных {response.text}')
             for vacancy in vacancies:
-                result.append({'id': vacancy['id'],
-                               'name': vacancy['name'],
-                               'employer': vacancy['employer']['name'],
+                result.append({'id': vacancy.get('id'),
+                               'name': vacancy.get('name'),
+                               'employer': vacancy.get('employer').get('name'),
                                'salary': self.verify_salary(vacancy.get('salary')),
-                               'mid_salary': self.get_middle_salary(vacancy.get('salary'))
+                               'mid_salary': self.get_middle_salary(vacancy.get('salary')),
+                               'url': vacancy.get('alternate_url')
                               })
-                #print(vacancy)
             page += 1
             if response.json()['pages'] == page:
                 break
