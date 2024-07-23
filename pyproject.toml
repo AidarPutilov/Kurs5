@@ -7,6 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
+logging = "^0.4.9.6"
+pathlib = "^1.0.1"
+psycopg2 = "^2.9.9"
+configparser = "^7.0.0"
+requests = "^2.32.3"
 
 
 [build-system]
